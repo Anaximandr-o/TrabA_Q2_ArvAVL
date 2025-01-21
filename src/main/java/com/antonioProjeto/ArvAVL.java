@@ -1,2 +1,5 @@
-package com.antonioProjeto;public class ArvAVL {
+package com.antonioProjeto;
+
+public class ArvAVL {
+
 }
