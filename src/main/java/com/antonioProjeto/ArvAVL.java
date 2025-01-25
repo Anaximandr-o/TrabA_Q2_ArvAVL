@@ -187,8 +187,8 @@ public class ArvAVL {
             }
 
             Node sucessor = valorMinimo(no.direita);
-            no.chave = sucessor.chave; // Substitui a chave do nó atual pelo sucessor
-            no.direita = delete(no.direita, sucessor.chave); // Remove o sucessor
+            no.chave = sucessor.chave;
+            no.direita = delete(no.direita, sucessor.chave);
         }
 
         no.altura = Math.max(altura(no.esquerda), altura(no.direita)) + 1;
