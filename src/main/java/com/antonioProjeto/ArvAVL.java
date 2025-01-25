@@ -133,23 +133,87 @@ public class ArvAVL {
         return altura(raiz);
     }
 
-    public boolean contem(Node node) {
-        return get(node, raiz) != 0;
+    public boolean contem(int chave) {
+        return get(chave, raiz) != null;
     }
 
-    private int get(Node x, Node busca)
+    private Node get(int x, Node no)
     {
-        if(busca.chave == 0)
-            return 0;
+        if(no == null)
+            return null;
 
-        if(x.chave < busca.chave){
-            return get(x.esquerda, busca);
+        if(x < no.chave){
+            return get(x, no.esquerda);
         }
-        else if(x.chave > busca.chave){
-            return get(x.esquerda, busca);
+        else if(x > no.chave){
+            return get(x, no.direita);
         }
         else
-            return x.chave;
+            return no;
+    }
+
+    private Node valorMinimo(Node no) {
+        Node atual = no;
+
+        while (atual.esquerda != null) {
+            atual = atual.esquerda;
+        }
+
+        return atual;
+    }
+
+    public void delete(int chave) {
+        raiz = delete(raiz, chave);
+    }
+
+    private Node delete(Node no, int chave) {
+        if (no == null) {
+            return null;
+        }
+
+        if (chave < no.chave) {
+            no.esquerda = delete(no.esquerda, chave);
+        } else if (chave > no.chave) {
+            no.direita = delete(no.direita, chave);
+        } else {
+            if (no.esquerda == null && no.direita == null) {
+                return null;
+            }
+
+            if (no.esquerda == null) {
+                return no.direita;
+            } else if (no.direita == null) {
+                return no.esquerda;
+            }
+
+            Node sucessor = valorMinimo(no.direita);
+            no.chave = sucessor.chave; // Substitui a chave do nó atual pelo sucessor
+            no.direita = delete(no.direita, sucessor.chave); // Remove o sucessor
+        }
+
+        no.altura = Math.max(altura(no.esquerda), altura(no.direita)) + 1;
+
+        int balanceamento = obterBalanceamento(no);
+
+        if (balanceamento > 1 && obterBalanceamento(no.esquerda) >= 0) {
+            return rotacaoDireita(no);
+        }
+
+        if (balanceamento > 1 && obterBalanceamento(no.esquerda) < 0) {
+            no.esquerda = rotacaoEsquerda(no.esquerda);
+            return rotacaoDireita(no);
+        }
+
+        if (balanceamento < -1 && obterBalanceamento(no.direita) <= 0) {
+            return rotacaoEsquerda(no);
+        }
+
+        if (balanceamento < -1 && obterBalanceamento(no.direita) > 0) {
+            no.direita = rotacaoDireita(no.direita);
+            return rotacaoEsquerda(no);
+        }
+
+        return no;
     }
 
     public void removeLaura(int qtdNos){
@@ -157,15 +221,14 @@ public class ArvAVL {
         for(int i = 0; i < (qtdNos * qtdNos); i++){
             int antigoNo;
             do{
-                antigoNo = gerador.nextInt(100,1000000);
-            }while(!this.contem((Chave) Integer.valueOf(antigoNo)));
-            No no = new No ((Chave) Integer.valueOf(antigoNo),(Valor) Integer.valueOf(antigoNo));
-            this.delete(no, no.chave);
+                antigoNo = gerador.nextInt(1,10000);
+            }while(!this.contem(antigoNo));
+            this.delete(antigoNo);
             int novoNo;
             do{
-                novoNo = gerador.nextInt(100,1000000);
-            }while(this.contem((Chave) Integer.valueOf(novoNo)));
-            this.put((Chave) Integer.valueOf(novoNo),(Valor) Integer.valueOf(novoNo));
+                novoNo = gerador.nextInt(1,10000);
+            }while(this.contem(novoNo));
+            this.inserir(novoNo);
         }
     }
 }

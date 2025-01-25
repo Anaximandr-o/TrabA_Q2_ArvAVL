@@ -10,11 +10,11 @@ public class Main {
             for(int x = 0; x <100; x++){
                 ArvAVL arvore = new ArvAVL();
                 for(int j = 0; j < qtdNos; j++){
-                    int no = gerador.nextInt(100,1000000);
-                    arvore.put(no, no);
+                    int no = gerador.nextInt(1,10000);
+                    arvore.inserir(no);
                 }
                 arvore.removeLaura(qtdNos);
-                stats.addValue(arvore.altura());
+                stats.addValue(arvore.obterAltura());
             }
             System.out.println("Quantidade de nós - "+ qtdNos + " Altura esperada - " + ((Math.log(qtdNos)/Math.log(2)) * 4.311 - 1.953) +" Média das alturas - "+ stats.getMean() + " Desvio padrão: " + stats.getStandardDeviation());
         }
